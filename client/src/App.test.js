@@ -32,6 +32,8 @@ test("App renders without crashing", () => {
   expect(appComponent.length).toBe(1);
 });
 
-test("Class component that fetches data from server", () => {});
+describe("Test api calls to server", () => {
+  test("Class component that fetches data from server", () => {});
 
-test("Display the player data you receive from the API", () => {});
+  test("Display the player data you receive from the API", () => {});
+});
