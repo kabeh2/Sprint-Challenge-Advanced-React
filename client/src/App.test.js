@@ -1,6 +1,6 @@
 import React from "react";
 import { shallow } from "enzyme";
-import ReactDOM from "react-dom";
+import axios from "axios";
 import App from "./App";
 
 /**
@@ -25,6 +25,43 @@ const setup = (props = {}, state = null) => {
 const findByTestAttr = (wrapper, val) => {
   return wrapper.find(`[data-test="${val}"]`);
 };
+
+jest.mock("axios", () => {
+  const examplePlayers = [
+    {
+      name: "Test Name",
+      country: "Test Country",
+      searches: 1,
+      id: 0
+    }
+  ];
+
+  return {
+    get: jest.fn(() => Promise.resolve(examplePlayers))
+  };
+});
+
+it("fetch players on #componentDidMount", () => {
+  const app = setup();
+  app
+    .instance()
+    .fetchPlayers()
+    .then(() => {
+      expect(axios.get).toHaveBeenCalled();
+      expect(axios.get).toHaveBeenCalledWith(
+        "http://localhost:5000/api/players"
+      );
+      expect(app.state()).toHaveProperty("players", [
+        {
+          name: "Test Name",
+          country: "Test Country",
+          searches: 1,
+          id: 0
+        }
+      ]);
+      done();
+    });
+});
 
 test("App renders without crashing", () => {
   const wrapper = setup();
