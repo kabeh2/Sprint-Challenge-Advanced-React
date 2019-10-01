@@ -27,11 +27,13 @@ class App extends Component {
   render() {
     return (
       <div className="App" data-test="component-app">
-        {/* <ol>
+        <ol data-test="component-players">
           {this.state.players.map(player => (
-            <li key={player.id}>{player.name}</li>
+            <li key={player.id} data-test="component-player">
+              {player.name}
+            </li>
           ))}
-        </ol> */}
+        </ol>
       </div>
     );
   }
