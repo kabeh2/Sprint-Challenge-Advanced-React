@@ -1,9 +1,7 @@
 import React from "react";
 import App from "./App";
 
-// jest.unmock("axios");
 import axios from "axios";
-// import MockAdapter from "axios-mock-adapter";
 import { shallow } from "enzyme";
 
 /**
@@ -38,6 +36,12 @@ jest.mock("axios", () => {
         country: "Test Country",
         searches: 1,
         id: 0
+      },
+      {
+        name: "Name 2",
+        country: "Country 2",
+        searches: 2,
+        id: 1
       }
     ]
   };
@@ -59,7 +63,7 @@ describe("Test api calls to server", () => {
   it("fetch articles on #componentDidMount fetchPlayers method", async done => {
     const app = setup();
     const getSpy = jest.spyOn(axios, "get");
-    // const appComponent = findByTestAttr(app, "component-players");
+
     app
       .instance()
       // .componentDidMount()
@@ -75,12 +79,23 @@ describe("Test api calls to server", () => {
             country: "Test Country",
             searches: 1,
             id: 0
+          },
+          {
+            name: "Name 2",
+            country: "Country 2",
+            searches: 2,
+            id: 1
           }
         ]);
-        // expect(appComponent.length).toBe(1);
-        expect(
-          app.find("[data-test='component-players']").children()
-        ).toHaveLength(1);
+        expect(app.find("ol").children().length).toBe(2);
+        console.log(
+          app
+            .find("ol")
+            .children()
+            .debug()
+        );
+        expect(app.find("ol").find("li")).toBeTruthy();
+
         expect(getSpy).toBeCalled();
         getSpy.mockClear();
         done();
@@ -89,7 +104,27 @@ describe("Test api calls to server", () => {
 
   test("Display the player data you receive from the API", () => {
     const wrapper = setup();
-    const appComponent = findByTestAttr(wrapper, "component-players");
-    expect(appComponent.length).toBeGreaterThan(0);
+    const players = [
+      {
+        name: "Test Name",
+        country: "Test Country",
+        searches: 0,
+        id: 1
+      }
+    ];
+    wrapper.setState({ players });
+    expect(wrapper.state()).toHaveProperty("players", [
+      {
+        name: "Test Name",
+        country: "Test Country",
+        searches: 0,
+        id: 1
+      }
+    ]);
+    let texts = wrapper
+      .find('[data-test="component-players"]')
+      .find('[data-test="component-player"]')
+      .map(node => node.text());
+    expect(texts).toEqual(["Test Name"]);
   });
 });
