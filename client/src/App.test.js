@@ -108,8 +108,8 @@ describe("Test api calls to server", () => {
       {
         name: "Test Name",
         country: "Test Country",
-        searches: 1,
-        id: 0
+        searches: 0,
+        id: 1
       }
     ];
     wrapper.setState({ players });
@@ -117,8 +117,8 @@ describe("Test api calls to server", () => {
       {
         name: "Test Name",
         country: "Test Country",
-        searches: 1,
-        id: 0
+        searches: 0,
+        id: 1
       }
     ]);
     let texts = wrapper
