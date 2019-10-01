@@ -1,7 +1,10 @@
 import React from "react";
-import { shallow } from "enzyme";
-import axios from "axios";
 import App from "./App";
+
+// jest.unmock("axios");
+import axios from "axios";
+// import MockAdapter from "axios-mock-adapter";
+import { shallow } from "enzyme";
 
 /**
  * Factory function to create a ShallowWrapper for the App Component.
@@ -26,51 +29,67 @@ const findByTestAttr = (wrapper, val) => {
   return wrapper.find(`[data-test="${val}"]`);
 };
 
+// jest.mock("axios");
 jest.mock("axios", () => {
-  const examplePlayers = [
-    {
-      name: "Test Name",
-      country: "Test Country",
-      searches: 1,
-      id: 0
-    }
-  ];
+  const examplePlayers = {
+    data: [
+      {
+        name: "Test Name",
+        country: "Test Country",
+        searches: 1,
+        id: 0
+      }
+    ]
+  };
 
   return {
     get: jest.fn(() => Promise.resolve(examplePlayers))
   };
 });
 
-it("fetch players on #componentDidMount", () => {
-  const app = setup();
-  app
-    .instance()
-    .fetchPlayers()
-    .then(() => {
-      expect(axios.get).toHaveBeenCalled();
-      expect(axios.get).toHaveBeenCalledWith(
-        "http://localhost:5000/api/players"
-      );
-      expect(app.state()).toHaveProperty("players", [
-        {
-          name: "Test Name",
-          country: "Test Country",
-          searches: 1,
-          id: 0
-        }
-      ]);
-      done();
-    });
-});
-
-test("App renders without crashing", () => {
-  const wrapper = setup();
-  const appComponent = findByTestAttr(wrapper, "component-app");
-  expect(appComponent.length).toBe(1);
+describe("App renders", () => {
+  test("App renders without crashing", () => {
+    const wrapper = setup();
+    const appComponent = findByTestAttr(wrapper, "component-app");
+    expect(appComponent.length).toBe(1);
+  });
 });
 
 describe("Test api calls to server", () => {
-  test("Class component that fetches data from server", () => {});
+  it("fetch articles on #componentDidMount fetchPlayers method", async done => {
+    const app = setup();
+    const getSpy = jest.spyOn(axios, "get");
+    // const appComponent = findByTestAttr(app, "component-players");
+    app
+      .instance()
+      // .componentDidMount()
+      .fetchPlayers()
+      .then(() => {
+        expect(axios.get).toHaveBeenCalled();
+        expect(axios.get).toHaveBeenCalledWith(
+          "http://localhost:5000/api/players"
+        );
+        expect(app.state()).toHaveProperty("players", [
+          {
+            name: "Test Name",
+            country: "Test Country",
+            searches: 1,
+            id: 0
+          }
+        ]);
+        // expect(appComponent.length).toBe(1);
+        expect(
+          app.find("[data-test='component-players']").children()
+        ).toHaveLength(1);
+        expect(getSpy).toBeCalled();
+        getSpy.mockClear();
+        done();
+      });
+  });
 
-  test("Display the player data you receive from the API", () => {});
+  test("Display the player data you receive from the API", () => {
+    const wrapper = setup();
+    const appComponent = findByTestAttr(wrapper, "component-players");
+    expect(appComponent.length).toBeGreaterThan(0);
+  });
 });
