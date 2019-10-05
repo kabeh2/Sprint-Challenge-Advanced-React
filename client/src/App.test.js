@@ -128,3 +128,80 @@ describe("Test api calls to server", () => {
     expect(texts).toEqual(["Test Name"]);
   });
 });
+
+describe("While Game is over", () => {
+  // beforeEach(() => {});
+  it("Game over button is rendered and disabled", () => {
+    const endState = {
+      homeInning: 10
+    };
+    const wrapper = setup(null, endState);
+    const endBtn = findByTestAttr(wrapper, "component-game-over-btn");
+    expect(endBtn.text()).toContain("GAME OVER!");
+  });
+
+  it("Game over text under button appears", () => {
+    const endState = {
+      homeInning: 10
+    };
+    const wrapper = setup(null, endState);
+    const endText = findByTestAttr(wrapper, "component-winner");
+    expect(endText.text()).toContain("GAME OVER!");
+  });
+
+  describe("If Guest Team wins", () => {
+    it("Render Winner Guest Team", () => {
+      const endState = {
+        homeInning: 10,
+        guestScore: 1,
+        homeScore: 0
+      };
+      const wrapper = setup(null, endState);
+      const guestWinner = findByTestAttr(wrapper, "component-winner");
+      expect(guestWinner.text()).toContain("GUEST");
+    });
+  });
+
+  describe("If Home Team wins", () => {
+    it("Render Winner Home Team", () => {
+      const endState = {
+        homeInning: 10,
+        guestScore: 0,
+        homeScore: 1
+      };
+      const wrapper = setup(null, endState);
+      const homeWinner = findByTestAttr(wrapper, "component-winner");
+      expect(homeWinner.text()).toContain("HOME");
+    });
+  });
+
+  describe("If Tie Game", () => {
+    it("Render Tie Game Text", () => {
+      const endState = {
+        homeInning: 10,
+        guestScore: 1,
+        homeScore: 1
+      };
+      const wrapper = setup(null, endState);
+      const tieGame = findByTestAttr(wrapper, "component-winner");
+      expect(tieGame.text()).toContain("TIE");
+    });
+  });
+});
+
+describe("the useLocalStorage hook", () => {
+  it("should make the api call to fetch the default value and set it in the state", async () => {
+    const { darkMode, setValue } = renderHook(() => useDarkMode());
+    // await setValue();
+    expect(darkMode.current[0]).toEqual("darkMode");
+  });
+  it("should update the state when the setValue function is called", async () => {
+    const { darkMode, setValue } = renderHook(() => useDarkMode());
+    // await setValue();
+    expect(darkMode.current[0]).toEqual("darkMode");
+    act(() => {
+      result.darkMode[1]("test-value-2");
+    });
+    expect(result.current[0]).toEqual("test-value-2");
+  });
+});
