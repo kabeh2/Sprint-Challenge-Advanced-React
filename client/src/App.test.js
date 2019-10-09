@@ -128,20 +128,3 @@ describe("Test api calls to server", () => {
     expect(texts).toEqual(["Test Name"]);
   });
 });
-
-// describe("the useLocalStorage hook", () => {
-//   it("should make the api call to fetch the default value and set it in the state", async () => {
-//     const { darkMode, setValue } = renderHook(() => useDarkMode());
-//     // await setValue();
-//     expect(darkMode.current[0]).toEqual("darkMode");
-//   });
-//   it("should update the state when the setValue function is called", async () => {
-//     const { darkMode, setValue } = renderHook(() => useDarkMode());
-//     // await setValue();
-//     expect(darkMode.current[0]).toEqual("darkMode");
-//     act(() => {
-//       result.darkMode[1]("test-value-2");
-//     });
-//     expect(result.current[0]).toEqual("test-value-2");
-//   });
-// });
