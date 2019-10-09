@@ -49,17 +49,13 @@ describe("Navbar", () => {
         .find('[data-test="component-navbar-toggle"]')
         .simulate("click", e);
       // .onClick();
-      //   expect(setValue).toHaveBeenCalledWith(darkMode);
+      expect(setValue).toHaveBeenCalledWith(darkMode);
     });
   });
 
   test("Navbar is rendered", () => {
     expect(appComponent.length).toBe(1);
   });
-
-  //   test("Navbar snapshot", () => {
-  //     expect(appComponent.html()).toMatchSnapshot();
-  //   });
 
   describe("Test Navbar Toggle", () => {
     test("Class changes each time clicked", () => {
