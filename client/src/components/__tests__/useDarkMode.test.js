@@ -1,6 +1,8 @@
 import React from "react";
-import { shallow } from "enzyme";
+import { act } from "react-dom/test-utils";
+import { shallow, mount } from "enzyme";
 import useDarkMode from "../useDarkMode";
+import App from "../../App";
 
 const HookWrapper = props => {
   const hook = props.hook ? props.hook() : undefined;
@@ -20,5 +22,25 @@ describe("useDarkMode", () => {
     let { hook } = wrapper.find("div").props();
     let [darkMode] = hook;
     expect(darkMode).toEqual(false);
+  });
+
+  test("should toggle class correctly", () => {
+    let wrapper = shallow(<HookWrapper hook={() => useDarkMode(false)} />);
+    let appWrapper = shallow(<App />);
+
+    let { hook } = wrapper.find("div").props();
+    let [darkMode, setValue] = hook;
+    expect(darkMode).toEqual(false);
+
+    expect(appWrapper.hasClass("App")).toEqual(true);
+
+    setValue(true);
+
+    ({ hook } = wrapper.find("div").props());
+    [darkMode, setValue] = hook;
+
+    expect(darkMode).toEqual(true);
+
+    expect(appWrapper.hasClass("App")).toEqual(true);
   });
 });
